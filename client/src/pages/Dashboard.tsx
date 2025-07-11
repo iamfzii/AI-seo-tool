@@ -6,7 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Loader2, Play, Folder, Wand2 } from "lucide-react";
+import { Loader2, Play, Folder, Wand2, Download, ExternalLink } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
@@ -78,6 +78,57 @@ export default function Dashboard() {
 
   const handleGenerateAIFix = (auditId: number) => {
     aiFixMutation.mutate(auditId);
+  };
+
+  const handleDownloadAudit = async (audit: any) => {
+    try {
+      const response = await fetch(`/api/download/audit/${audit.id}`);
+      if (!response.ok) throw new Error('Download failed');
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      const repo = getRepositoryById(audit.repositoryId);
+      a.download = `audit-${repo?.name || 'unknown'}-${audit.id}.md`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Download error:', error);
+      toast({
+        title: "Download Failed",
+        description: "Could not download the audit report",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDownloadFix = async (fixReport: any) => {
+    try {
+      const response = await fetch(`/api/download/fix/${fixReport.id}`);
+      if (!response.ok) throw new Error('Download failed');
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      const audit = auditResults.find(a => a.id === fixReport.auditId);
+      const repo = audit ? getRepositoryById(audit.repositoryId) : null;
+      a.download = `fix-${repo?.name || 'unknown'}-${fixReport.id}.md`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Download error:', error);
+      toast({
+        title: "Download Failed",
+        description: "Could not download the fix report",
+        variant: "destructive",
+      });
+    }
   };
 
   const getSeverityColor = (severity: string) => {
@@ -181,25 +232,49 @@ export default function Dashboard() {
                   <AccordionContent>
                     <div className="p-4">
                       <div className="mb-4">
-                        <p className="text-sm text-muted-foreground mb-2">SEO Score: {audit.score}%</p>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleGenerateAIFix(audit.id)}
-                          disabled={aiFixMutation.isPending}
-                        >
-                          {aiFixMutation.isPending ? (
-                            <>
-                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                              Generating Fixes...
-                            </>
-                          ) : (
-                            <>
-                              <Wand2 className="w-4 h-4 mr-2" />
-                              Generate AI Fixes
-                            </>
-                          )}
-                        </Button>
+                        <div className="flex items-center justify-between mb-3">
+                          <div>
+                            <p className="text-sm text-muted-foreground mb-1">SEO Score: 
+                              <span className={`font-semibold ml-1 ${
+                                audit.score >= 90 ? 'text-green-400' : 
+                                audit.score >= 70 ? 'text-yellow-400' : 'text-red-400'
+                              }`}>
+                                {audit.score}%
+                              </span>
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              Audit completed: {new Date(audit.createdAt).toLocaleDateString()}
+                            </p>
+                          </div>
+                          <div className="flex space-x-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleDownloadAudit(audit)}
+                              title="Download audit report"
+                            >
+                              <Download className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleGenerateAIFix(audit.id)}
+                              disabled={aiFixMutation.isPending}
+                            >
+                              {aiFixMutation.isPending ? (
+                                <>
+                                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                  Generating...
+                                </>
+                              ) : (
+                                <>
+                                  <Wand2 className="w-4 h-4 mr-2" />
+                                  Generate AI Fixes
+                                </>
+                              )}
+                            </Button>
+                          </div>
+                        </div>
                       </div>
                       <Table>
                         <TableHeader>
@@ -246,26 +321,60 @@ export default function Dashboard() {
               return (
                 <AccordionItem key={fixReport.id} value={`fix-${fixReport.id}`}>
                   <AccordionTrigger className="hover:no-underline">
-                    <div className="flex items-center space-x-3">
-                      <Wand2 className="w-4 h-4 text-green-400" />
-                      <span className="font-medium">{repo?.name} fixes</span>
-                      <Badge variant="secondary" className="bg-green-500">
-                        {fixReport.fixes?.length || 0} fixes
-                      </Badge>
+                    <div className="flex items-center justify-between w-full">
+                      <div className="flex items-center space-x-3">
+                        <Wand2 className="w-4 h-4 text-green-400" />
+                        <span className="font-medium">{repo?.name} fixes</span>
+                        <Badge variant="secondary" className="bg-green-500">
+                          {fixReport.fixes?.length || 0} fixes
+                        </Badge>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDownloadFix(fixReport);
+                          }}
+                          title="Download fix report"
+                        >
+                          <Download className="w-4 h-4" />
+                        </Button>
+                      </div>
                     </div>
                   </AccordionTrigger>
                   <AccordionContent>
                     <div className="p-4 space-y-4">
+                      <div className="flex items-center justify-between mb-4">
+                        <p className="text-sm text-muted-foreground">
+                          Generated: {new Date(fixReport.appliedAt).toLocaleDateString()}
+                        </p>
+                        <Badge variant="outline" className="text-green-400 border-green-400">
+                          {fixReport.status || 'Generated'}
+                        </Badge>
+                      </div>
                       {fixReport.fixes?.map((fix: any, index: number) => (
-                        <Card key={index} className="p-4">
-                          <h3 className="text-green-400 font-medium mb-2">{fix.title}</h3>
-                          <p className="text-sm text-muted-foreground mb-2">{fix.description}</p>
-                          <div className="bg-black p-3 rounded-lg">
+                        <Card key={index} className="p-4 border-green-500/20">
+                          <div className="flex items-start justify-between mb-2">
+                            <h3 className="text-green-400 font-medium">{fix.title}</h3>
+                            <Badge variant="outline" className="text-xs">
+                              {fix.file}
+                            </Badge>
+                          </div>
+                          <p className="text-sm text-muted-foreground mb-3">{fix.description}</p>
+                          <div className="bg-black p-3 rounded-lg border border-green-500/20">
                             <pre className="text-sm text-green-400 overflow-x-auto">
                               <code>{fix.code}</code>
                             </pre>
                           </div>
-                          <p className="text-xs text-muted-foreground mt-2">File: {fix.file}</p>
+                          <div className="flex items-center justify-between mt-3">
+                            <p className="text-xs text-muted-foreground">Apply this fix to: {fix.file}</p>
+                            <Button variant="ghost" size="sm" className="text-green-400 hover:text-green-300">
+                              <ExternalLink className="w-3 h-3 mr-1" />
+                              Copy
+                            </Button>
+                          </div>
                         </Card>
                       ))}
                     </div>

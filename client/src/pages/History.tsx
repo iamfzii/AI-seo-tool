@@ -17,80 +17,13 @@ export default function History() {
     queryKey: ['/api/repositories'],
   });
 
-  const { data: audits, isLoading: auditsLoading } = useQuery({
-    queryKey: ['/api/audits'],
+  const { data: historyData, isLoading: historyLoading } = useQuery({
+    queryKey: ['/api/history'],
   });
 
-  const isLoading = reposLoading || auditsLoading;
+  const isLoading = reposLoading || historyLoading;
 
-  // Mock history data - in real app this would come from API
-  const historyData = [
-    {
-      id: 1,
-      date: "2024-01-15 14:30",
-      action: "Audit",
-      repository: "portfolio-site",
-      status: "Complete",
-      issues: "3 critical, 2 warnings",
-      score: 87
-    },
-    {
-      id: 2,
-      date: "2024-01-15 14:35",
-      action: "Fix",
-      repository: "portfolio-site",
-      status: "Applied",
-      issues: "3 fixes generated",
-      score: 95
-    },
-    {
-      id: 3,
-      date: "2024-01-14 16:20",
-      action: "Audit",
-      repository: "ecommerce-app",
-      status: "Complete",
-      issues: "5 warnings",
-      score: 78
-    },
-    {
-      id: 4,
-      date: "2024-01-14 16:25",
-      action: "Fix",
-      repository: "ecommerce-app",
-      status: "Applied",
-      issues: "5 fixes generated",
-      score: 92
-    },
-    {
-      id: 5,
-      date: "2024-01-13 10:45",
-      action: "Audit",
-      repository: "blog-platform",
-      status: "Complete",
-      issues: "No issues",
-      score: 98
-    },
-    {
-      id: 6,
-      date: "2024-01-12 09:15",
-      action: "Audit",
-      repository: "company-website",
-      status: "Failed",
-      issues: "8 critical, 12 warnings",
-      score: 45
-    },
-    {
-      id: 7,
-      date: "2024-01-11 15:30",
-      action: "Fix",
-      repository: "api-service",
-      status: "Applied",
-      issues: "4 fixes generated",
-      score: 88
-    }
-  ];
-
-  const filteredHistory = historyData.filter(item => {
+  const filteredHistory = (historyData || []).filter((item: any) => {
     const matchesSearch = item.repository.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesAction = actionFilter === "all" || item.action.toLowerCase() === actionFilter;
     const matchesRepo = repoFilter === "all" || item.repository === repoFilter;
@@ -126,6 +59,29 @@ export default function History() {
     if (issues.includes('warning')) return 'text-yellow-400';
     if (issues.includes('fixes generated')) return 'text-green-400';
     return 'text-green-400';
+  };
+
+  const handleDownload = async (item: any) => {
+    try {
+      const endpoint = item.type === 'audit' ? 
+        `/api/download/audit/${item.auditId}` : 
+        `/api/download/fix/${item.fixId}`;
+      
+      const response = await fetch(endpoint);
+      if (!response.ok) throw new Error('Download failed');
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${item.action.toLowerCase()}-${item.repository}-${item.type === 'audit' ? item.auditId : item.fixId}.md`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Download error:', error);
+    }
   };
 
   if (isLoading) {
@@ -236,7 +192,12 @@ export default function History() {
                   <TableCell className="font-medium">{item.score}%</TableCell>
                   <TableCell>
                     <div className="flex space-x-2">
-                      <Button variant="ghost" size="sm">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => handleDownload(item)}
+                        title={`Download ${item.action} report`}
+                      >
                         <Download className="w-4 h-4" />
                       </Button>
                       <Button variant="ghost" size="sm">

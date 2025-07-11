@@ -15,6 +15,13 @@ export interface IStorage {
   
   getAiFixReports(auditId: number): Promise<AiFixReport[]>;
   createAiFixReport(report: InsertAiFixReport): Promise<AiFixReport>;
+  
+  // Additional methods for download functionality
+  getAllAudits(): Promise<Audit[]>;
+  getAllRepositories(): Promise<Repository[]>;
+  getAllAiFixReports(): Promise<AiFixReport[]>;
+  getAuditById(id: number): Promise<Audit | undefined>;
+  getAiFixReportById(id: number): Promise<AiFixReport | undefined>;
 }
 
 export class MemStorage implements IStorage {
@@ -112,7 +119,8 @@ export class MemStorage implements IStorage {
     const user: User = { 
       ...insertUser, 
       id, 
-      createdAt: new Date()
+      createdAt: new Date(),
+      githubUsername: insertUser.githubUsername || null
     };
     this.users.set(id, user);
     return user;
@@ -130,6 +138,8 @@ export class MemStorage implements IStorage {
       ...repository,
       id,
       lastUpdated: new Date(),
+      language: repository.language || null,
+      isActive: repository.isActive ?? true
     };
     this.repositories.set(id, repo);
     return repo;
@@ -162,6 +172,11 @@ export class MemStorage implements IStorage {
       ...audit,
       id,
       createdAt: new Date(),
+      status: audit.status || null,
+      repositoryId: audit.repositoryId || null,
+      score: audit.score || null,
+      userId: audit.userId || null,
+      issues: audit.issues || null
     };
     this.audits.set(id, newAudit);
     return newAudit;
@@ -179,9 +194,33 @@ export class MemStorage implements IStorage {
       ...report,
       id,
       appliedAt: new Date(),
+      status: report.status || null,
+      auditId: report.auditId || null,
+      fixes: report.fixes || null
     };
     this.aiFixReports.set(id, newReport);
     return newReport;
+  }
+
+  // Additional methods for download functionality
+  async getAllAudits(): Promise<Audit[]> {
+    return Array.from(this.audits.values());
+  }
+
+  async getAllRepositories(): Promise<Repository[]> {
+    return Array.from(this.repositories.values());
+  }
+
+  async getAllAiFixReports(): Promise<AiFixReport[]> {
+    return Array.from(this.aiFixReports.values());
+  }
+
+  async getAuditById(id: number): Promise<Audit | undefined> {
+    return this.audits.get(id);
+  }
+
+  async getAiFixReportById(id: number): Promise<AiFixReport | undefined> {
+    return this.aiFixReports.get(id);
   }
 }
 
