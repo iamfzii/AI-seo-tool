@@ -46,23 +46,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/history", async (req, res) => {
     try {
       const audits = await activeStorage.getAudits(1); // Mock user ID 1
-      const auditHistory = await Promise.all(audits.map(async (audit) => {
-        const repository = await activeStorage.getRepositories(1);
-        const repo = repository.find(r => r.id === audit.repositoryId);
-        const fixes = await activeStorage.getAiFixReports(audit.id);
+      const repositories = await activeStorage.getRepositories(1);
+      const allFixes = await activeStorage.getAllAiFixReports();
+      
+      const activities = [];
+      
+      // Add audit activities
+      for (const audit of audits) {
+        const repo = repositories.find(r => r.id === audit.repositoryId);
+        const auditFixes = allFixes.filter(fix => fix.auditId === audit.id);
         
-        return {
+        activities.push({
           id: `audit-${audit.id}`,
+          type: 'audit',
           auditId: audit.id,
           repositoryName: repo?.name || 'Unknown Repository',
           score: audit.score,
           issues: audit.issues,
-          fixes: fixes.length,
+          issuesCount: Array.isArray(audit.issues) ? audit.issues.length : 0,
           date: audit.createdAt,
-          status: audit.status
-        };
-      }));
-      res.json(auditHistory);
+          status: audit.status,
+          action: 'Audit'
+        });
+        
+        // Add fix activities for this audit
+        for (const fix of auditFixes) {
+          activities.push({
+            id: `fix-${fix.id}`,
+            type: 'fix',
+            auditId: audit.id,
+            fixId: fix.id,
+            repositoryName: repo?.name || 'Unknown Repository',
+            fixes: Array.isArray(fix.fixes) ? fix.fixes.length : 0,
+            date: fix.appliedAt || audit.createdAt,
+            status: fix.status,
+            action: 'Fix'
+          });
+        }
+      }
+      
+      // Sort by date (most recent first)
+      activities.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      
+      res.json(activities);
     } catch (error) {
       console.error('Error fetching audit history:', error);
       res.status(500).json({ error: 'Failed to fetch audit history' });

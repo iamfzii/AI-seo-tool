@@ -25,7 +25,7 @@ export default function History() {
 
   const filteredHistory = (historyData || []).filter((item: any) => {
     const matchesSearch = item.repositoryName.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesAction = actionFilter === "all" || (item.fixes > 0 ? "fix" : "audit") === actionFilter;
+    const matchesAction = actionFilter === "all" || item.action.toLowerCase() === actionFilter;
     const matchesRepo = repoFilter === "all" || item.repositoryName === repoFilter;
     
     return matchesSearch && matchesAction && matchesRepo;
@@ -63,7 +63,9 @@ export default function History() {
 
   const handleDownload = async (item: any) => {
     try {
-      const endpoint = `/api/download/audit/${item.auditId}`;
+      const endpoint = item.type === 'fix' ? 
+        `/api/download/fix/${item.fixId}` : 
+        `/api/download/audit/${item.auditId}`;
       
       const response = await fetch(endpoint);
       if (!response.ok) throw new Error('Download failed');
@@ -72,19 +74,24 @@ export default function History() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `audit-${item.repositoryName}-${item.auditId}.md`;
+      a.download = item.type === 'fix' ? 
+        `fix-${item.repositoryName}-${item.fixId}.md` : 
+        `audit-${item.repositoryName}-${item.auditId}.md`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error('Download failed:', error);
-      // Show error toast if available
     }
   };
 
   const handleView = (item: any) => {
-    alert(`Viewing audit for ${item.repositoryName}\nScore: ${item.score}%\nStatus: ${item.status}\nDate: ${new Date(item.date).toLocaleDateString()}`);
+    const details = item.type === 'fix' 
+      ? `Viewing fix for ${item.repositoryName}\nFixes: ${item.fixes}\nStatus: ${item.status}\nDate: ${new Date(item.date).toLocaleDateString()}`
+      : `Viewing audit for ${item.repositoryName}\nScore: ${item.score}%\nIssues: ${item.issuesCount}\nStatus: ${item.status}\nDate: ${new Date(item.date).toLocaleDateString()}`;
+    
+    alert(details);
   };
 
   if (isLoading) {
@@ -188,20 +195,20 @@ export default function History() {
               {filteredHistory.map((item) => (
                 <TableRow key={item.id}>
                   <TableCell className="text-sm text-muted-foreground">{new Date(item.date).toLocaleDateString()}</TableCell>
-                  <TableCell>{getActionBadge(item.fixes > 0 ? "Fix" : "Audit")}</TableCell>
+                  <TableCell>{getActionBadge(item.action)}</TableCell>
                   <TableCell className="font-medium">{item.repositoryName}</TableCell>
                   <TableCell>{getStatusBadge(item.status)}</TableCell>
-                  <TableCell className={getIssuesColor(item.fixes > 0 ? 'fixes generated' : 'issues found')}>
-                    {item.fixes > 0 ? `${item.fixes} fixes generated` : 'Issues found'}
+                  <TableCell className={getIssuesColor(item.type === 'fix' ? 'fixes generated' : 'issues found')}>
+                    {item.type === 'fix' ? `${item.fixes} fixes generated` : `${item.issuesCount} issues found`}
                   </TableCell>
-                  <TableCell className="font-medium">{item.score}%</TableCell>
+                  <TableCell className="font-medium">{item.type === 'audit' ? `${item.score}%` : 'N/A'}</TableCell>
                   <TableCell>
                     <div className="flex space-x-2">
                       <Button 
                         variant="ghost" 
                         size="sm" 
                         onClick={() => handleDownload(item)}
-                        title={`Download ${item.action} report`}
+                        title={`Download ${item.type} report`}
                       >
                         <Download className="w-4 h-4" />
                       </Button>
