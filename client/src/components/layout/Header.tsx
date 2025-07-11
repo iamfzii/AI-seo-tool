@@ -58,7 +58,7 @@ export default function Header() {
                 <span>john.doe</span>
               </div>
             ) : (
-              <Button size="sm" className="glow-effect" onClick={() => window.location.href = '/api/login'}>
+              <Button size="sm" className="github-button" onClick={() => window.location.href = '/api/login'}>
                 <Github className="mr-2 h-4 w-4" />
                 Connect GitHub
               </Button>

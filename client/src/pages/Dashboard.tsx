@@ -133,9 +133,9 @@ export default function Dashboard() {
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case 'critical': return 'bg-red-500';
-      case 'warning': return 'bg-yellow-500';
-      default: return 'bg-gray-500';
+      case 'critical': return 'bg-red-500 dark:bg-red-600';
+      case 'warning': return 'bg-yellow-500 dark:bg-yellow-600';
+      default: return 'bg-gray-500 dark:bg-gray-600';
     }
   };
 
@@ -161,14 +161,17 @@ export default function Dashboard() {
       </div>
 
       {/* Repository Selection */}
-      <Card className="mb-8">
+      <Card className="mb-8 card-hover border-2 border-transparent hover:border-primary/20">
         <CardHeader>
-          <CardTitle>Select Repositories</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <Folder className="w-5 h-5 text-primary" />
+            Select Repositories
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {repositories?.map((repo: any) => (
-              <label key={repo.id} className="flex items-center space-x-3 p-4 border border-border rounded-lg hover:bg-card/50 cursor-pointer">
+              <label key={repo.id} className="flex items-center space-x-3 p-4 border border-border rounded-lg hover:bg-primary/5 hover:border-primary/20 cursor-pointer transition-all duration-200">
                 <Checkbox
                   checked={selectedRepos.includes(repo.id)}
                   onCheckedChange={(checked) => handleRepoSelect(repo.id, !!checked)}
@@ -193,6 +196,7 @@ export default function Dashboard() {
         <Button
           onClick={handleRunAudit}
           disabled={selectedRepos.length === 0 || runAuditMutation.isPending}
+          className="glow-effect"
         >
           {runAuditMutation.isPending ? (
             <>

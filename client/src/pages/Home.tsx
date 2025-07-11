@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="py-20 px-4">
+      <section className="py-20 px-4 hero-section">
         <div className="container mx-auto text-center">
           <h1 className="text-5xl md:text-7xl font-bold mb-6 gradient-text">
             AI-Powered SEO Audits
@@ -17,11 +17,11 @@ export default function Home() {
             Connect your GitHub repos and let our AI analyze your code for SEO issues. Get instant fixes and improve your site's search rankings.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Button size="lg" className="glow-effect" onClick={() => window.location.href = '/api/login'}>
+            <Button size="lg" className="github-button" onClick={() => window.location.href = '/api/login'}>
               <Github className="mr-2 h-4 w-4" />
               Connect to GitHub
             </Button>
-            <Button size="lg" variant="outline">
+            <Button size="lg" variant="outline" className="glow-effect">
               <Play className="mr-2 h-4 w-4" />
               Watch Demo
             </Button>
@@ -58,33 +58,33 @@ export default function Home() {
         <div className="container mx-auto">
           <h2 className="text-4xl font-bold text-center mb-12">Features</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="p-6">
-              <Github className="w-12 h-12 text-primary mb-4" />
+            <Card className="p-6 card-hover border-2 border-transparent hover:border-primary/20">
+              <Github className="w-12 h-12 text-primary mb-4 feature-icon" />
               <h3 className="text-xl font-semibold mb-2">GitHub Integration</h3>
               <p className="text-muted-foreground">Seamlessly connect your GitHub repositories and analyze your code directly from your existing workflow.</p>
             </Card>
-            <Card className="p-6">
-              <Bot className="w-12 h-12 text-primary mb-4" />
+            <Card className="p-6 card-hover border-2 border-transparent hover:border-primary/20">
+              <Bot className="w-12 h-12 text-primary mb-4 feature-icon" />
               <h3 className="text-xl font-semibold mb-2">AI-Powered Analysis</h3>
               <p className="text-muted-foreground">Advanced AI algorithms scan your code for SEO issues and provide intelligent recommendations.</p>
             </Card>
-            <Card className="p-6">
-              <Search className="w-12 h-12 text-primary mb-4" />
+            <Card className="p-6 card-hover border-2 border-transparent hover:border-primary/20">
+              <Search className="w-12 h-12 text-primary mb-4 feature-icon" />
               <h3 className="text-xl font-semibold mb-2">Comprehensive Audits</h3>
               <p className="text-muted-foreground">Get detailed SEO audits covering meta tags, titles, structured data, and performance metrics.</p>
             </Card>
-            <Card className="p-6">
-              <TrendingUp className="w-12 h-12 text-primary mb-4" />
+            <Card className="p-6 card-hover border-2 border-transparent hover:border-primary/20">
+              <TrendingUp className="w-12 h-12 text-primary mb-4 feature-icon" />
               <h3 className="text-xl font-semibold mb-2">Real-time Monitoring</h3>
               <p className="text-muted-foreground">Track your SEO improvements over time with detailed analytics and progress reports.</p>
             </Card>
-            <Card className="p-6">
-              <Code className="w-12 h-12 text-primary mb-4" />
+            <Card className="p-6 card-hover border-2 border-transparent hover:border-primary/20">
+              <Code className="w-12 h-12 text-primary mb-4 feature-icon" />
               <h3 className="text-xl font-semibold mb-2">Automated Fixes</h3>
               <p className="text-muted-foreground">Apply AI-generated fixes with one click, or get detailed code suggestions for manual implementation.</p>
             </Card>
-            <Card className="p-6">
-              <CheckCircle className="w-12 h-12 text-primary mb-4" />
+            <Card className="p-6 card-hover border-2 border-transparent hover:border-primary/20">
+              <CheckCircle className="w-12 h-12 text-primary mb-4 feature-icon" />
               <h3 className="text-xl font-semibold mb-2">Best Practices</h3>
               <p className="text-muted-foreground">Follow industry-standard SEO best practices tailored for modern web development frameworks.</p>
             </Card>
@@ -97,23 +97,23 @@ export default function Home() {
         <div className="container mx-auto">
           <h2 className="text-4xl font-bold text-center mb-12">How It Works</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <Card className="p-6 text-center">
-              <Github className="w-12 h-12 text-primary mx-auto mb-4" />
+            <Card className="p-6 text-center card-hover border-2 border-transparent hover:border-primary/20">
+              <Github className="w-12 h-12 text-primary mx-auto mb-4 feature-icon" />
               <h3 className="text-xl font-semibold mb-2">Connect GitHub</h3>
               <p className="text-muted-foreground">Link your GitHub account and select repositories to audit</p>
             </Card>
-            <Card className="p-6 text-center">
-              <Search className="w-12 h-12 text-primary mx-auto mb-4" />
+            <Card className="p-6 text-center card-hover border-2 border-transparent hover:border-primary/20">
+              <Search className="w-12 h-12 text-primary mx-auto mb-4 feature-icon" />
               <h3 className="text-xl font-semibold mb-2">Run Audit</h3>
               <p className="text-muted-foreground">Our AI scans your code for SEO issues and best practices</p>
             </Card>
-            <Card className="p-6 text-center">
-              <Bot className="w-12 h-12 text-primary mx-auto mb-4" />
+            <Card className="p-6 text-center card-hover border-2 border-transparent hover:border-primary/20">
+              <Bot className="w-12 h-12 text-primary mx-auto mb-4 feature-icon" />
               <h3 className="text-xl font-semibold mb-2">AI Analysis</h3>
               <p className="text-muted-foreground">Get intelligent suggestions and automated fixes</p>
             </Card>
-            <Card className="p-6 text-center">
-              <TrendingUp className="w-12 h-12 text-primary mx-auto mb-4" />
+            <Card className="p-6 text-center card-hover border-2 border-transparent hover:border-primary/20">
+              <TrendingUp className="w-12 h-12 text-primary mx-auto mb-4 feature-icon" />
               <h3 className="text-xl font-semibold mb-2">Track Progress</h3>
               <p className="text-muted-foreground">Monitor your SEO improvements over time</p>
             </Card>
@@ -159,10 +159,10 @@ export default function Home() {
                 quote: "Finally, an SEO tool that understands code. The automated fixes are a game-changer for our workflow."
               }
             ].map((testimonial, index) => (
-              <Card key={index} className="p-6">
+              <Card key={index} className="p-6 card-hover border-2 border-transparent hover:border-primary/20">
                 <div className="flex items-center mb-4">
-                  <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center mr-3">
-                    <span className="font-semibold">{testimonial.avatar}</span>
+                  <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center mr-3">
+                    <span className="font-semibold text-white">{testimonial.avatar}</span>
                   </div>
                   <div>
                     <h4 className="font-semibold">{testimonial.name}</h4>
@@ -181,47 +181,47 @@ export default function Home() {
         <div className="container mx-auto">
           <h2 className="text-4xl font-bold text-center mb-12">Choose Your Plan</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <Card className="p-8">
+            <Card className="p-8 card-hover border-2 border-transparent hover:border-primary/20">
               <h3 className="text-2xl font-semibold mb-4">Starter</h3>
               <div className="text-4xl font-bold mb-6">$9<span className="text-lg text-muted-foreground">/month</span></div>
               <ul className="space-y-3 mb-8">
-                <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-400 mr-2" /> Up to 3 repositories</li>
-                <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-400 mr-2" /> 50 audits/month</li>
-                <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-400 mr-2" /> Basic AI fixes</li>
-                <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-400 mr-2" /> Email support</li>
+                <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" /> Up to 3 repositories</li>
+                <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" /> 50 audits/month</li>
+                <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" /> Basic AI fixes</li>
+                <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" /> Email support</li>
               </ul>
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full glow-effect">
                 Get Started
               </Button>
             </Card>
-            <Card className="p-8 border-2 border-primary relative">
-              <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-primary">
+            <Card className="p-8 card-hover border-2 border-primary relative bg-gradient-to-br from-primary/5 to-primary/10">
+              <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-primary text-primary-foreground">
                 Most Popular
               </Badge>
               <h3 className="text-2xl font-semibold mb-4">Pro</h3>
               <div className="text-4xl font-bold mb-6">$29<span className="text-lg text-muted-foreground">/month</span></div>
               <ul className="space-y-3 mb-8">
-                <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-400 mr-2" /> Up to 15 repositories</li>
-                <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-400 mr-2" /> 200 audits/month</li>
-                <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-400 mr-2" /> Advanced AI fixes</li>
-                <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-400 mr-2" /> Priority support</li>
-                <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-400 mr-2" /> Custom reports</li>
+                <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" /> Up to 15 repositories</li>
+                <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" /> 200 audits/month</li>
+                <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" /> Advanced AI fixes</li>
+                <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" /> Priority support</li>
+                <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" /> Custom reports</li>
               </ul>
-              <Button className="w-full">
+              <Button className="w-full glow-effect">
                 Get Started
               </Button>
             </Card>
-            <Card className="p-8">
+            <Card className="p-8 card-hover border-2 border-transparent hover:border-primary/20">
               <h3 className="text-2xl font-semibold mb-4">Enterprise</h3>
               <div className="text-4xl font-bold mb-6">$99<span className="text-lg text-muted-foreground">/month</span></div>
               <ul className="space-y-3 mb-8">
-                <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-400 mr-2" /> Unlimited repositories</li>
-                <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-400 mr-2" /> Unlimited audits</li>
-                <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-400 mr-2" /> Premium AI fixes</li>
-                <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-400 mr-2" /> 24/7 support</li>
-                <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-400 mr-2" /> Team collaboration</li>
+                <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" /> Unlimited repositories</li>
+                <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" /> Unlimited audits</li>
+                <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" /> Premium AI fixes</li>
+                <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" /> 24/7 support</li>
+                <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" /> Team collaboration</li>
               </ul>
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full glow-effect">
                 Contact Sales
               </Button>
             </Card>
