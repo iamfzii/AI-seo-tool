@@ -72,7 +72,7 @@ export default function History() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `audit-${item.auditId}.csv`;
+      a.download = `audit-${item.repositoryName}-${item.auditId}.md`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
