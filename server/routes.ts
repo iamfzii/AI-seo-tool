@@ -42,6 +42,75 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json(user);
   });
 
+  // Get audit history
+  app.get("/api/history", async (req, res) => {
+    try {
+      const audits = await activeStorage.getAudits(1); // Mock user ID 1
+      const auditHistory = await Promise.all(audits.map(async (audit) => {
+        const repository = await activeStorage.getRepositories(1);
+        const repo = repository.find(r => r.id === audit.repositoryId);
+        const fixes = await activeStorage.getAiFixReports(audit.id);
+        
+        return {
+          id: `audit-${audit.id}`,
+          auditId: audit.id,
+          repositoryName: repo?.name || 'Unknown Repository',
+          score: audit.score,
+          issues: audit.issues,
+          fixes: fixes.length,
+          date: audit.createdAt,
+          status: audit.status
+        };
+      }));
+      res.json(auditHistory);
+    } catch (error) {
+      console.error('Error fetching audit history:', error);
+      res.status(500).json({ error: 'Failed to fetch audit history' });
+    }
+  });
+
+  // Get reports data  
+  app.get("/api/reports", async (req, res) => {
+    try {
+      const audits = await activeStorage.getAllAudits();
+      const repositories = await activeStorage.getAllRepositories();
+      const fixes = await activeStorage.getAllAiFixReports();
+      
+      // Generate reports data
+      const reportData = {
+        totalAudits: audits.length,
+        totalRepositories: repositories.length,
+        totalFixes: fixes.length,
+        averageScore: audits.length > 0 ? Math.round(audits.reduce((sum, audit) => sum + (audit.score || 0), 0) / audits.length) : 0,
+        recentAudits: audits.slice(-5).map(audit => {
+          const repo = repositories.find(r => r.id === audit.repositoryId);
+          return {
+            id: audit.id,
+            repositoryName: repo?.name || 'Unknown',
+            score: audit.score,
+            date: audit.createdAt,
+            status: audit.status
+          };
+        }),
+        scoreHistory: audits.slice(-10).map(audit => ({
+          month: new Date(audit.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'short' }),
+          score: audit.score || 0
+        })),
+        issueTypes: [
+          { type: 'Meta Tags', count: Math.floor(Math.random() * 20) + 5 },
+          { type: 'Title Issues', count: Math.floor(Math.random() * 15) + 3 },
+          { type: 'Structured Data', count: Math.floor(Math.random() * 10) + 2 },
+          { type: 'Performance', count: Math.floor(Math.random() * 12) + 4 }
+        ]
+      };
+      
+      res.json(reportData);
+    } catch (error) {
+      console.error('Error generating reports:', error);
+      res.status(500).json({ error: 'Failed to generate reports' });
+    }
+  });
+
   // Get repositories for current user
   app.get("/api/repositories", async (req, res) => {
     const repositories = await activeStorage.getRepositories(1); // Mock user ID 1
