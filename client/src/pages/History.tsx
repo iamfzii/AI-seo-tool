@@ -63,9 +63,7 @@ export default function History() {
 
   const handleDownload = async (item: any) => {
     try {
-      const endpoint = item.type === 'audit' ? 
-        `/api/download/audit/${item.auditId}` : 
-        `/api/download/fix/${item.fixId}`;
+      const endpoint = `/api/download/audit/${item.auditId}`;
       
       const response = await fetch(endpoint);
       if (!response.ok) throw new Error('Download failed');
@@ -74,14 +72,19 @@ export default function History() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `${item.action.toLowerCase()}-${item.repository}-${item.type === 'audit' ? item.auditId : item.fixId}.md`;
+      a.download = `audit-${item.auditId}.csv`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Download error:', error);
+      console.error('Download failed:', error);
+      // Show error toast if available
     }
+  };
+
+  const handleView = (item: any) => {
+    alert(`Viewing audit for ${item.repositoryName}\nScore: ${item.score}%\nStatus: ${item.status}\nDate: ${new Date(item.date).toLocaleDateString()}`);
   };
 
   if (isLoading) {
@@ -202,7 +205,12 @@ export default function History() {
                       >
                         <Download className="w-4 h-4" />
                       </Button>
-                      <Button variant="ghost" size="sm">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => handleView(item)}
+                        title="View audit details"
+                      >
                         <Eye className="w-4 h-4" />
                       </Button>
                     </div>

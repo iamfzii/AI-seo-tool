@@ -162,10 +162,13 @@ ${JSON.stringify(report.fixes)},${report.status},${report.appliedAt}`;
 
   // Run audit on selected repositories
   app.post("/api/audit", async (req, res) => {
-    const { repositoryIds } = req.body;
+    const { repositoryId, repositoryIds } = req.body;
+    
+    // Handle single repository or multiple repositories
+    const repoIds = repositoryIds || [repositoryId];
     
     const results = [];
-    for (const repositoryId of repositoryIds) {
+    for (const repoId of repoIds) {
       // Mock audit results
       const mockIssues = [
         { error: "Missing meta description", file: "pages/index.js", line: 12, severity: "critical" },
@@ -174,7 +177,7 @@ ${JSON.stringify(report.fixes)},${report.status},${report.appliedAt}`;
       ];
       
       const audit = await activeStorage.createAudit({
-        repositoryId,
+        repositoryId: repoId,
         userId: 1,
         score: Math.floor(Math.random() * 40) + 60, // Random score between 60-100
         issues: mockIssues,
