@@ -8,6 +8,16 @@ Crawlin.io is an AI-powered SEO audit tool designed for developers. It allows us
 
 Preferred communication style: Simple, everyday language.
 
+## Recent Changes
+
+### Navigation Structure Update (July 11, 2025)
+- Updated landing page navigation to show component sections (Features, How It Works, Pricing, About) instead of app pages
+- Dashboard, Reports, and History navigation now only appear when user is on authenticated pages
+- Replaced GitHub button in hero section with "Connect to GitHub" button
+- Added GitHub authentication routes (/api/login, /api/logout) for OAuth simulation
+- Added Features section to landing page with detailed feature cards
+- Updated header component to conditionally show navigation based on current page context
+
 ## System Architecture
 
 The application follows a monorepo structure with a clear separation between client-side and server-side code:

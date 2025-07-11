@@ -23,6 +23,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
   } else {
     console.log('DATABASE_URL not provided, using in-memory storage');
   }
+
+  // GitHub OAuth simulation endpoints
+  app.get("/api/login", (req, res) => {
+    // In a real implementation, this would redirect to GitHub OAuth
+    // For demo purposes, we'll just redirect to dashboard
+    res.redirect('/dashboard');
+  });
+
+  app.get("/api/logout", (req, res) => {
+    // Clear session and redirect to home
+    res.redirect('/');
+  });
+
   // Get current user (mock user for demo)
   app.get("/api/user", async (req, res) => {
     const user = await activeStorage.getUser(1); // Mock user ID 1

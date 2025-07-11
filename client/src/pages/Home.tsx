@@ -17,12 +17,10 @@ export default function Home() {
             Connect your GitHub repos and let our AI analyze your code for SEO issues. Get instant fixes and improve your site's search rankings.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Link href="/dashboard">
-              <Button size="lg" className="glow-effect">
-                <Github className="mr-2 h-4 w-4" />
-                Connect GitHub
-              </Button>
-            </Link>
+            <Button size="lg" className="glow-effect" onClick={() => window.location.href = '/api/login'}>
+              <Github className="mr-2 h-4 w-4" />
+              Connect to GitHub
+            </Button>
             <Button size="lg" variant="outline">
               <Play className="mr-2 h-4 w-4" />
               Watch Demo
@@ -55,8 +53,47 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Features */}
+      <section id="features" className="py-20 px-4">
+        <div className="container mx-auto">
+          <h2 className="text-4xl font-bold text-center mb-12">Features</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <Card className="p-6">
+              <Github className="w-12 h-12 text-primary mb-4" />
+              <h3 className="text-xl font-semibold mb-2">GitHub Integration</h3>
+              <p className="text-muted-foreground">Seamlessly connect your GitHub repositories and analyze your code directly from your existing workflow.</p>
+            </Card>
+            <Card className="p-6">
+              <Bot className="w-12 h-12 text-primary mb-4" />
+              <h3 className="text-xl font-semibold mb-2">AI-Powered Analysis</h3>
+              <p className="text-muted-foreground">Advanced AI algorithms scan your code for SEO issues and provide intelligent recommendations.</p>
+            </Card>
+            <Card className="p-6">
+              <Search className="w-12 h-12 text-primary mb-4" />
+              <h3 className="text-xl font-semibold mb-2">Comprehensive Audits</h3>
+              <p className="text-muted-foreground">Get detailed SEO audits covering meta tags, titles, structured data, and performance metrics.</p>
+            </Card>
+            <Card className="p-6">
+              <TrendingUp className="w-12 h-12 text-primary mb-4" />
+              <h3 className="text-xl font-semibold mb-2">Real-time Monitoring</h3>
+              <p className="text-muted-foreground">Track your SEO improvements over time with detailed analytics and progress reports.</p>
+            </Card>
+            <Card className="p-6">
+              <Code className="w-12 h-12 text-primary mb-4" />
+              <h3 className="text-xl font-semibold mb-2">Automated Fixes</h3>
+              <p className="text-muted-foreground">Apply AI-generated fixes with one click, or get detailed code suggestions for manual implementation.</p>
+            </Card>
+            <Card className="p-6">
+              <CheckCircle className="w-12 h-12 text-primary mb-4" />
+              <h3 className="text-xl font-semibold mb-2">Best Practices</h3>
+              <p className="text-muted-foreground">Follow industry-standard SEO best practices tailored for modern web development frameworks.</p>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       {/* How It Works */}
-      <section className="py-20 px-4 bg-card/20">
+      <section id="how-it-works" className="py-20 px-4 bg-card/20">
         <div className="container mx-auto">
           <h2 className="text-4xl font-bold text-center mb-12">How It Works</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -140,7 +177,7 @@ export default function Home() {
       </section>
 
       {/* Pricing */}
-      <section className="py-20 px-4">
+      <section id="pricing" className="py-20 px-4">
         <div className="container mx-auto">
           <h2 className="text-4xl font-bold text-center mb-12">Choose Your Plan</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -193,7 +230,7 @@ export default function Home() {
       </section>
 
       {/* About */}
-      <section className="py-20 px-4 bg-card/20">
+      <section id="about" className="py-20 px-4 bg-card/20">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
