@@ -24,9 +24,9 @@ export default function History() {
   const isLoading = reposLoading || historyLoading;
 
   const filteredHistory = (historyData || []).filter((item: any) => {
-    const matchesSearch = item.repository.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesAction = actionFilter === "all" || item.action.toLowerCase() === actionFilter;
-    const matchesRepo = repoFilter === "all" || item.repository === repoFilter;
+    const matchesSearch = item.repositoryName.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesAction = actionFilter === "all" || (item.fixes > 0 ? "fix" : "audit") === actionFilter;
+    const matchesRepo = repoFilter === "all" || item.repositoryName === repoFilter;
     
     return matchesSearch && matchesAction && matchesRepo;
   });
@@ -184,11 +184,13 @@ export default function History() {
             <TableBody>
               {filteredHistory.map((item) => (
                 <TableRow key={item.id}>
-                  <TableCell className="text-sm text-muted-foreground">{item.date}</TableCell>
-                  <TableCell>{getActionBadge(item.action)}</TableCell>
-                  <TableCell className="font-medium">{item.repository}</TableCell>
+                  <TableCell className="text-sm text-muted-foreground">{new Date(item.date).toLocaleDateString()}</TableCell>
+                  <TableCell>{getActionBadge(item.fixes > 0 ? "Fix" : "Audit")}</TableCell>
+                  <TableCell className="font-medium">{item.repositoryName}</TableCell>
                   <TableCell>{getStatusBadge(item.status)}</TableCell>
-                  <TableCell className={getIssuesColor(item.issues)}>{item.issues}</TableCell>
+                  <TableCell className={getIssuesColor(item.fixes > 0 ? 'fixes generated' : 'issues found')}>
+                    {item.fixes > 0 ? `${item.fixes} fixes generated` : 'Issues found'}
+                  </TableCell>
                   <TableCell className="font-medium">{item.score}%</TableCell>
                   <TableCell>
                     <div className="flex space-x-2">

@@ -111,6 +111,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Download endpoints for audit and fix reports
+  app.get('/api/download/audit/:auditId', async (req, res) => {
+    try {
+      const auditId = parseInt(req.params.auditId);
+      const audit = await activeStorage.getAuditById(auditId);
+      
+      if (!audit) {
+        return res.status(404).json({ error: 'Audit not found' });
+      }
+
+      const csvData = `Repository,Score,Issues,Date,Status
+${audit.repositoryId},${audit.score},${JSON.stringify(audit.issues)},${audit.createdAt},${audit.status}`;
+      
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader('Content-Disposition', `attachment; filename="audit-${auditId}.csv"`);
+      res.send(csvData);
+    } catch (error) {
+      console.error('Error downloading audit:', error);
+      res.status(500).json({ error: 'Failed to download audit' });
+    }
+  });
+
+  app.get('/api/download/fix/:reportId', async (req, res) => {
+    try {
+      const reportId = parseInt(req.params.reportId);
+      const report = await activeStorage.getAiFixReportById(reportId);
+      
+      if (!report) {
+        return res.status(404).json({ error: 'Fix report not found' });
+      }
+
+      const csvData = `Fix Report,Status,Applied Date
+${JSON.stringify(report.fixes)},${report.status},${report.appliedAt}`;
+      
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader('Content-Disposition', `attachment; filename="fix-report-${reportId}.csv"`);
+      res.send(csvData);
+    } catch (error) {
+      console.error('Error downloading fix report:', error);
+      res.status(500).json({ error: 'Failed to download fix report' });
+    }
+  });
+
   // Get repositories for current user
   app.get("/api/repositories", async (req, res) => {
     const repositories = await activeStorage.getRepositories(1); // Mock user ID 1
