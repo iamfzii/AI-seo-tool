@@ -134,6 +134,32 @@
     radial-gradient(circle at 40% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
 }
 
+.sellmore-gradient {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e40af 100%);
+}
+
+.feature-card {
+  transition: all 0.3s ease;
+  border-left: 4px solid transparent;
+}
+
+.feature-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.feature-card.blue {
+  border-left-color: #3b82f6;
+}
+
+.feature-card.purple {
+  border-left-color: #8b5cf6;
+}
+
+.feature-card.green {
+  border-left-color: #10b981;
+}
+
 .feature-icon {
   transition: all 0.3s ease;
 }
