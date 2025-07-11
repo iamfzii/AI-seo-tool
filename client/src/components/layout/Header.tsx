@@ -39,9 +39,6 @@ export default function Header() {
               </>
             ) : (
               <>
-                <Link href="/" className={`hover:text-primary transition-colors ${isActive('/') ? 'text-primary' : ''}`}>
-                  Home
-                </Link>
                 <Link href="/dashboard" className={`hover:text-primary transition-colors ${isActive('/dashboard') ? 'text-primary' : ''}`}>
                   Dashboard
                 </Link>
