@@ -1,0 +1,56 @@
+
+You are an expert UI/UX designer and frontend developer. Your task is to analyze the following web application and propose specific, actionable enhancements to its user interface and user experience.
+
+## Application Context
+
+**Purpose:** The application is an AI-powered SEO audit tool called "Crawlin.io" designed for developers. It allows users to connect their GitHub account, select repositories, run an SEO audit on the code, and receive AI-generated suggestions for fixes.
+
+**Tech Stack:**
+*   **Framework:** Next.js (App Router)
+*   **Language:** TypeScript
+*   **UI Library:** React
+*   **Styling:** Tailwind CSS
+*   **Component Library:** ShadCN UI (with `lucide-react` for icons)
+*   **Theme:** A custom dark theme with a black background (`#000`), white text, and a vibrant blue for primary actions and accents (`hsl(217 91% 60%)`). The overall aesthetic is modern, clean, and developer-focused.
+
+### Core Application Pages & UI Components:
+
+1.  **Landing Page (`/`):** A standard marketing page with the following sections:
+    *   **Hero:** A prominent headline, description, and call-to-action buttons. Features a code block animation to show SEO fixes.
+    *   **How It Works:** A 4-step process illustrated with icons and short descriptions in cards.
+    *   **Demo:** An embedded video placeholder.
+    *   **Testimonials:** Customer quotes in cards.
+    *   **Pricing:** A 3-tier pricing table.
+    *   **About:** A brief company mission statement next to an image.
+    *   **Layout:** Standard `Header` and `Footer`.
+
+2.  **Dashboard (`/dashboard`):** The main functional area of the app.
+    *   **Repo Selection:** Users can select repositories from a list using checkboxes.
+    *   **Audit Control:** A "Run Audit" button that becomes active when repos are selected.
+    *   **Results Display:** Audit results appear below, grouped by repository in an `Accordion`. Each repository's results are shown in a `Table` listing the error, file, and line number.
+    *   **AI Fixes:** After an audit, a "Fix SEO with AI" button appears. Clicking it reveals an "AI Fix Summary" section, also using an `Accordion` to show markdown-formatted fix suggestions for each repo.
+
+3.  **Reports Page (`/dashboard/reports`):**
+    *   **KPI Cards:** At the top, there are four `Card` components showing key stats: Overall SEO Score, Critical Issues, Total Audits, and Repositories Monitored.
+    *   **Charts:** Two charts visualize data over the last 6 months: a `LineChart` for "SEO Score Over Time" and a `BarChart` for "Issues Breakdown" (critical vs. warnings).
+    *   **Recent Audits:** A `Table` at the bottom lists the 5 most recent audits.
+
+4.  **History Page (`/dashboard/history`):**
+    *   **Data Table:** A comprehensive `Table` logs all past "Audit" and "Fix" activities.
+    *   **Filtering & Searching:** Includes a search `Input`, and `Select` dropdowns to filter by action type (Audit/Fix) and repository, plus a `Popover` with a `Calendar` to filter by date.
+    *   **Actions:** Users can download the entire filtered view as a CSV or download individual audit/fix reports as Markdown files from each row.
+
+## Task: Propose UI/UX Enhancements
+
+Based on the description above, provide a list of concrete UI/UX improvements. For each suggestion, please:
+1.  **Identify the Page/Component:** Specify which part of the application the enhancement applies to.
+2.  **Describe the Enhancement:** Clearly explain the proposed change.
+3.  **State the Rationale:** Justify why this change would improve the user experience (e.g., "improves clarity," "reduces cognitive load," "enhances visual appeal," "streamlines workflow").
+
+### Example Suggestion Format:
+
+*   **Page/Component:** Dashboard (`/dashboard`)
+*   **Enhancement:** Instead of just showing a loading spinner inside the "Run Audit" button, disable the entire repository selection section during an audit and display a progress bar or a more prominent loading state over the results area.
+*   **Rationale:** This provides clearer feedback to the user that a process is running and prevents them from making changes while the audit is in progress, improving the overall user experience and reducing potential confusion.
+
+Now, please provide your list of proposed enhancements.
